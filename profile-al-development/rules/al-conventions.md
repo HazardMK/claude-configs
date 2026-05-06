@@ -29,3 +29,13 @@ Set a page-level default where all fields share the same area (almost always `Ap
 
 - All public procedures need `/// <summary>` XML doc comments.
 - Document every parameter, return value, and any non-obvious behavior.
+
+## Compiler Diagnostics
+
+The compile hook enforces errors as hard stops. Warnings and infos from any analyzer — whether or not they are part of the configured hook — must also be addressed:
+
+- **Errors**: must be fixed before the turn ends (enforced by hook).
+- **Warnings**: must be fixed. No warning may be left in place without resolution.
+- **Infos**: must be considered. Fix them unless the effort is clearly disproportionate to the gain. When in doubt, fix it — infos exist because the analyzer author considered them worth flagging.
+
+Do not suppress diagnostics with pragmas unless there is a documented, specific reason. A suppressed warning is not a fixed warning.

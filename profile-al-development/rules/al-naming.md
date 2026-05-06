@@ -11,23 +11,22 @@ PascalCase for ALL identifiers — objects, variables, fields, procedures, param
 
 ## Namespaces
 
-- Root namespace segment is the AppSource registered affix (e.g. `ABC`).
-- Build a hierarchy beneath it: `namespace ABC.Sales;`, `namespace ABC.Sales.Documents;`.
-- The namespace is what provides uniqueness — object names do NOT carry the affix.
+Always use a minimum two-level namespace. The registered AppSource affix forms the root, with at least one further segment beneath it — e.g. `namespace ABC.Sales;`, `namespace ABC.Core;`, `namespace ABC.Sales.Documents;`.
 
-## Affix Rules (AppSource Cop Alignment)
+A two-level (or deeper) namespace provides full uniqueness. Object names do NOT carry the affix when this condition is met. The registered affix is defined in `AppSourceCop.json`.
+
+**Let AppSourceCop be the authority.** If AppSourceCop is configured (which it should be) and does not complain about a missing affix, the affix is not required. If it complains, add it. Do not add affixes preemptively when the namespace already satisfies the requirement.
+
+## Affix Rules for Extension Fields
+
+Object names never carry the affix (namespace handles it). Extension fields on base-app or third-party tables are different — they require a **suffix** affix:
 
 | Context | Object Name Affix | Field Name Affix |
 |---|---|---|
 | Custom table | No | No |
-| Table extension | No | **Yes, suffix only** |
-| Custom page | No | N/A |
-| Page extension | No | N/A |
+| Table extension | No | **Suffix only** |
+| Custom page / page extension | No | N/A |
 | Codeunit / Enum / Interface | No | N/A |
-| Enum extension | No | **Yes, suffix only** |
+| Enum extension | No | **Suffix only** |
 
-- **Never use prefix affixes on extension fields.** AppSource requires suffix.
-- Example: `"Loyalty Tier ABC"` — correct. `"ABC Loyalty Tier"` — wrong.
-- Extension *object* names also exclude the affix — the namespace handles uniqueness.
-
-For detailed examples, invoke the `al-coding-standards` skill.
+- **Never use prefix affixes on extension fields.** `"Loyalty Tier ABC"` — correct. `"ABC Loyalty Tier"` — wrong.
