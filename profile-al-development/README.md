@@ -432,6 +432,27 @@ cat ~/claude-configs/profile-al-development/.claude-plugin/plugin.json
 - Check `.mcp.json` paths
 - Verify BC Intelligence MCP is running
 
+### ALCops MCP Server Crashes on Startup (version mismatch)
+
+`alcops-mcp` (ALCops.Mcp, alpha) auto-downloads the *latest* BC DevTools from NuGet, but as of
+`0.1.0-alpha.9` it's internally pinned to an older version (`17.0.33.55542`). The mismatch
+causes a `FileNotFoundException` for `Microsoft.Dynamics.Nav.CodeAnalysis` on startup.
+
+**Fix:** install the matching pinned BC DevTools version and point `BCDEVELOPMENTTOOLSPATH` at
+it (this is what the path in `.mcp.json` expects to exist):
+
+```bash
+dotnet tool install --tool-path ~/.alcops/devtools-17.0.33.55542 --version 17.0.33.55542 Microsoft.Dynamics.BusinessCentral.Development.Tools
+```
+
+If `alcops-mcp` starts crashing again after an ALCops.Mcp update, check what version it now
+expects and reinstall the pinned devtools at that version instead, updating both the
+`--version` above and the folder name in `.mcp.json`'s `BCDEVELOPMENTTOOLSPATH`:
+
+```bash
+grep -A1 '"Microsoft.Dynamics.Nav.CodeAnalysis"' ~/.dotnet/tools/.store/alcops.mcp/*/alcops.mcp/*/tools/*/any/ALCops.Mcp.deps.json
+```
+
 ### Clean Slate
 ```bash
 # Remove work directory to start fresh
