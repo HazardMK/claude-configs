@@ -17,19 +17,19 @@
       "command": "bc-code-intelligence-mcp",
       "args": [],
       "env": {
-        "BC_CODE_INTEL_CONFIG": "~/claude-configs/profile-al-development/bc-code-intel-config.json"
+        "BC_CODE_INTEL_CONFIG": "${HOME}/claude-configs/profile-al-development/bc-code-intel-config.json"
       }
     },
     "alcops": {
       "command": "alcops-mcp",
       "env": {
-        "BCDEVELOPMENTTOOLSPATH": "~/.alcops/devtools-17.0.33.55542/.store/microsoft.dynamics.businesscentral.development.tools/17.0.33.55542/microsoft.dynamics.businesscentral.development.tools/17.0.33.55542/tools/net8.0/any"
+        "BCDEVELOPMENTTOOLSPATH": "${HOME}/.alcops/devtools-17.0.33.55542/.store/microsoft.dynamics.businesscentral.development.tools/17.0.33.55542/microsoft.dynamics.businesscentral.development.tools/17.0.33.55542/tools/net8.0/any"
       }
     },
     "bc-telemetry-buddy": {
       "type": "stdio",
       "command": "bctb-mcp",
-      "args": ["start", "--config", "~/claude-configs/profile-al-development/bctb-config.json"],
+      "args": ["start", "--config", "${HOME}/claude-configs/profile-al-development/bctb-config.json"],
       "env": {}
     }
   }

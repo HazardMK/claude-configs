@@ -93,7 +93,7 @@ test-reviewer → .dev/06-test-review.md
 
 ### MCP Server Integration
 
-The AL profile uses three MCP servers:
+The AL profile uses five MCP servers (configured in `profile-al-development/.mcp.json`):
 
 1. **BC Code Intelligence MCP** (`bc-code-intelligence-mcp`)
    - BC specialist consultations via structured personas
@@ -109,7 +109,15 @@ The AL profile uses three MCP servers:
    - Event discovery and dependency analysis
    - Runs via npx
 
-4. **Serena MCP** (optional project-specific MCP)
+4. **ALCops MCP** (`alcops`, command `alcops-mcp`)
+   - AL code analysis/linting via ALCops rules
+   - Requires `BCDEVELOPMENTTOOLSPATH` pointed at a matching BC devtools version
+
+5. **BC Telemetry Buddy MCP** (`bc-telemetry-buddy`, command `bctb-mcp`)
+   - BC telemetry querying and analysis
+   - Custom config via `bctb-config.json`
+
+6. **Serena MCP** (optional project-specific MCP)
    - IDE assistant integration
    - Project context awareness
 

@@ -31,7 +31,7 @@ In your AL project's `.claude/settings.json`:
     "my-configs": {
       "source": {
         "source": "directory",
-        "path": "/home/stefan/claude-configs"
+        "path": "~/claude-configs"
       }
     }
   },
@@ -409,9 +409,9 @@ In your project's `.claude/CLAUDE.md`:
 - Pages: 50100-50199
 
 ## Custom Prefix
-- All objects: `ACME`
+- All objects: `SPU`
 
-@/home/stefan/claude-configs/profile-al-development/CLAUDE.md
+@~/claude-configs/profile-al-development/CLAUDE.md
 ```
 
 The `@` import loads the profile, your settings augment it.
@@ -452,6 +452,22 @@ expects and reinstall the pinned devtools at that version instead, updating both
 ```bash
 grep -A1 '"Microsoft.Dynamics.Nav.CodeAnalysis"' ~/.dotnet/tools/.store/alcops.mcp/*/alcops.mcp/*/tools/*/any/ALCops.Mcp.deps.json
 ```
+
+### MCP Server Fails to Reconnect / `-32000` Error (path env vars)
+
+Claude Code does **not** expand a leading `~` in `.mcp.json` `env`/`args` string values — it
+spawns MCP server processes directly, so a literal `~/...` string is passed to the child
+process's environment unresolved, which most tools then fail to find. This affects any path-like
+value in this file (`BCDEVELOPMENTTOOLSPATH`, `BC_CODE_INTEL_CONFIG`, `bctb-mcp`'s `--config` arg).
+
+**Fix:** use `${HOME}` instead of `~` — Claude Code documents and supports `${VAR}` substitution
+(pulling from its own process environment) for MCP server configs, and this actually resolves to
+a real absolute path before the server is spawned. Don't hardcode `/home/<user>/...` either, since
+this repo is synced across machines with different home directories.
+
+Remember both the repo copy (`~/claude-configs/profile-al-development/.mcp.json`) and the
+installed plugin copy (`~/.claude/plugins/cache/claude-configs/profile-al-development/<version>/.mcp.json`)
+need the fix, then run `/reload-plugins`, for it to take effect in a live session.
 
 ### Clean Slate
 ```bash
