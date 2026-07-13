@@ -48,7 +48,7 @@ Classify every user request by complexity, then invoke the matching skill:
 - `/init-context` — One-time project context setup
 - `/interview` — Deep requirements gathering (40+ questions)
 - `/plan` — Competitive solution design (2-3 architects debate)
-- `/develop` — Parallel implementation + 4-specialist review
+- `/develop` — Parallel implementation + 5-specialist review
 - `/fix` — Quick fix (3 tiers: haiku/sonnet/opus)
 - `/test` — Parallel test development (4 engineers)
 - `/document` — Technical documentation generation

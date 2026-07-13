@@ -1,6 +1,6 @@
 ---
 name: develop
-description: Implement AL/BC solution using parallel development agents and 4-specialist review team. Spawns N developer agents for parallel modules, then 4 reviewer agents for comprehensive code review.
+description: Implement AL/BC solution using parallel development agents and 5-specialist review team. Spawns N developer agents for parallel modules, then 5 reviewer agents for comprehensive code review.
 ---
 
 # /develop — Engineering Manager Orchestration
@@ -60,34 +60,52 @@ As developer agents work:
 - **Naming consistency:** Verify that naming conventions are consistent across all developers (prefixes, affixes, casing).
 - **Object ID usage:** Verify no duplicate object IDs across developers. Each developer should use IDs from their assigned range.
 
-## Step 6: Spawn 4 Reviewer Agents IN PARALLEL
+## Step 6: Spawn 5 Reviewer Agents IN PARALLEL
 
 When all development is complete:
 
 1. Read the reviewer prompts from `reviewer-prompts.md` in this skill directory.
 2. Collect the list of ALL AL files created by all developers.
-3. Spawn exactly 4 reviewer agents simultaneously using the **Agent tool**:
+3. Spawn exactly 5 reviewer agents simultaneously using the **Agent tool**:
    - **Security Reviewer**
    - **AL Expert Reviewer**
    - **Performance Reviewer**
    - **Test Coverage Reviewer**
+   - **BCQuality Reviewer**
 4. Each reviewer gets:
    - Their specific prompt section from `reviewer-prompts.md`
    - The complete list of all AL files to review
    - The solution plan for context
 5. Use model: **sonnet** for all reviewers.
 
-**Spawn all 4 reviewers simultaneously.**
+**Spawn all 5 reviewers simultaneously.**
 
 ## Step 7: Review Findings and Manage Iteration
 
 When all reviewers complete:
 
-1. **Collect** all findings from all 4 reviewers.
+1. **Collect** all findings from all 5 reviewers.
 2. **Categorize** each finding:
    - **CRITICAL** — Must fix. Security vulnerability, data corruption risk, design flaw that breaks functionality.
    - **HIGH** — Should fix. Performance issue, DRY violation, missing error handling, poor pattern usage.
    - **MINOR** — Nice to have. Documentation gaps, naming style preferences, minor readability improvements.
+
+### BCQuality Severity Mapping
+
+The BCQuality Reviewer returns structured JSON (see its prompt), not prose — map it into the buckets above instead of judging it manually:
+
+| BCQuality `severity` | Mapped to |
+|---|---|
+| `blocker` | CRITICAL |
+| `major` | HIGH |
+| `minor` | MINOR |
+| `info` | Not tabled — folded into the report's prose "Observations" section |
+
+- Each row contributed by BCQuality gets a `Source` column value of `BCQuality`, and — where BCQuality supplied `references[]` — the primary knowledge-file path is appended in the Fix Recommendation cell (e.g. `... (see microsoft/knowledge/performance/setloadfields-ordering.md)`), so the user can trace the finding back to a specific rule.
+- The 4 other reviewers' rows are unaffected; they get a `Source` column value matching their own name (`Security`, `AL Expert`, `Performance`, `Test Coverage`) for consistency.
+- **Agent findings** (BCQuality findings with `references: []` and an `id` prefixed `agent:`) are — per BCQuality's own contract — always capped at `minor` severity, so they always land in the MINOR table regardless of how the finding reads. No override needed; this falls out of the mapping table above.
+- **Outcome handling:** `completed` (even with empty `findings`), `not-applicable`, and `no-knowledge` are all clean passes — nothing to add. `partial` — include the findings for the evaluated subset and note `outcome-reason` in Step 8's report. `failed` — ignore `findings` entirely, note `outcome-reason` in Step 8's report, and do not let it block iteration; the other 4 reviewers still gate as before.
+
 3. **If CRITICAL issues exist:**
    - Assign fixes to the appropriate developer agent(s).
    - After fixes, re-run the relevant reviewer(s) to verify.
@@ -112,7 +130,7 @@ Write `.dev/<task-slug>/03-code-review.md` with YOUR synthesis (not a copy-paste
 ## Review Process
 - Number of developers: N
 - Review iterations: N
-- Reviewers: Security, AL Expert, Performance, Test Coverage
+- Reviewers: Security, AL Expert, Performance, Test Coverage, BCQuality
 
 ## Critical Issues Found and Fixed
 | # | Issue | Reviewer | Fix Applied |
@@ -129,6 +147,7 @@ Write `.dev/<task-slug>/03-code-review.md` with YOUR synthesis (not a copy-paste
 - AL Expert: APPROVED / CONCERNS
 - Performance: APPROVED / CONCERNS
 - Test Coverage: APPROVED / CONCERNS
+- BCQuality: APPROVED / CONCERNS
 
 ## Recommendation
 <Your synthesized recommendation to the user>

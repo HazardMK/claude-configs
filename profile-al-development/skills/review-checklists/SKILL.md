@@ -35,6 +35,7 @@ Before presenting a solution plan to the user, verify:
 
 Before presenting code to the user, verify:
 
+- [ ] **BCQuality automated review** -- invoke `bcquality:bcquality-al-review` against the changed file(s) (`file-path` input for a single file, `pr-diff` for a multi-file change) before the checklist items below. Any `blocker` or `major` finding is a failing item -- send it back with the finding's `message` and, if present, the primary `references[0].path`, using the same treatment as any other checklist failure. `minor`/`info` findings are noted in the review output but do not block. Treat `not-applicable`, `no-knowledge`, and `failed` outcomes as a clean pass for this item (log `outcome-reason` if present) -- BCQuality's unavailability never blocks this checklist.
 - [ ] **Matches the plan** -- implementation follows the agreed solution design; deviations are explained
 - [ ] **AL coding standards met** -- PascalCase, namespaces, affix rules, SetLoadFields, FieldCaption errors, DataClassification, ApplicationArea (see al-coding-standards skill)
 - [ ] **Consistent naming** -- identifiers follow the same conventions throughout; no mix of styles

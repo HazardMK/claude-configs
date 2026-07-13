@@ -1,7 +1,7 @@
 {
   "name": "profile-al-development",
-  "description": "Lead-as-Manager AL development for Business Central with agent teams. Main session acts as engineering manager, spawning specialist teammates for parallel work. Competitive solution design (2-3 architects debate approaches), parallel implementation (N developers on different modules), parallel code review (4 specialists: security, AL expert, performance, test coverage), parallel test development (4 engineers: unit, integration, scenario, edge case). Skills: interview, plan, develop, fix, test, document, compile, publish, run-tests, al-mutate, al-symbols, bc-source, local-bc, verify-tests. MCP integration (BC Intelligence, MS Docs, AL Dependency, ALCOPS, BCTB).",
-  "version": "5.2.0",
+  "description": "Lead-as-Manager AL development for Business Central with agent teams. Main session acts as engineering manager, spawning specialist teammates for parallel work. Competitive solution design (2-3 architects debate approaches), parallel implementation (N developers on different modules), parallel code review (5 specialists: security, AL expert, performance, test coverage, BCQuality), parallel test development (4 engineers: unit, integration, scenario, edge case). Skills: interview, plan, develop, fix, test, document, compile, publish, run-tests, al-mutate, al-symbols, bc-source, local-bc, verify-tests. MCP integration (BC Intelligence, MS Docs, AL Dependency, ALCOPS, BCTB).",
+  "version": "5.3.0",
   "author": {
     "name": "Stefan"
   },
