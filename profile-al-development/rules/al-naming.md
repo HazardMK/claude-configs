@@ -19,14 +19,14 @@ A two-level (or deeper) namespace provides full uniqueness. Object names do NOT 
 
 ## Affix Rules for Extension Fields
 
-Object names never carry the affix (namespace handles it). Extension fields on base-app or third-party tables are different — they require a **suffix** affix:
+Object names never carry the affix (namespace handles it). Extension fields on base-app or third-party tables are different — they require a **prefix** affix:
 
 | Context | Object Name Affix | Field Name Affix |
 |---|---|---|
 | Custom table | No | No |
-| Table extension | No | **Suffix only** |
+| Table extension | No | **Prefix only** |
 | Custom page / page extension | No | N/A |
 | Codeunit / Enum / Interface | No | N/A |
-| Enum extension | No | **Suffix only** |
+| Enum extension | No | **Prefix only** |
 
-- **Never use prefix affixes on extension fields.** `"Loyalty Tier ABC"` — correct. `"ABC Loyalty Tier"` — wrong.
+- **Never use suffix affixes on extension fields.** `"ABC Loyalty Tier"` — correct. `"Loyalty Tier ABC"` — wrong.
