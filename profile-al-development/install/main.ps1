@@ -163,7 +163,7 @@ function Register-PluginViaSettingsFile {
     }
     $settings.enabledPlugins | Add-Member -NotePropertyName 'profile-al-development@claude-configs' -NotePropertyValue $true -Force
 
-    $settings | ConvertTo-Json -Depth 10 | Set-Content $settingsPath
+    $settings | ConvertTo-Json -Depth 10 | Set-Content $settingsPath -Encoding utf8
     Write-Ok "Wrote marketplace + plugin entries to $settingsPath"
 }
 
@@ -185,6 +185,7 @@ function Register-Plugin {
     if ($ok) {
         Write-Ok "Plugin registered (or already was) via the claude CLI"
     } elseif (-not $DryRun) {
+        Write-WarnLine "claude plugin CLI didn't register the plugin (command failed or returned non-zero)"
         Register-PluginViaSettingsFile
     }
 }

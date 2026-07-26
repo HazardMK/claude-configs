@@ -29,8 +29,14 @@
 
 .PARAMETER DryRun
     Forwarded to main.ps1: print the planned actions without installing anything.
+
+.NOTES
+    No [CmdletBinding()] here deliberately: this file is meant to be piped through `iex`
+    (`irm ... | iex`), where it's evaluated as a script block rather than invoked as a command —
+    parameters can't be passed through that way regardless, so only the defaults below ever
+    apply for the one-liner. Download the file and run it directly (`-File`) to pass switches
+    like -DryRun. main.ps1, which is always invoked with -File, does use [CmdletBinding()].
 #>
-[CmdletBinding()]
 param(
     [string]$InstallPath = (Join-Path $env:USERPROFILE 'claude-configs'),
     [string]$RepoOwner = 'HazardMK',
