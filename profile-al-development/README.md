@@ -509,6 +509,53 @@ Desktop notifications for when Claude needs your attention or finishes work. Add
 
 **Note:** These hooks go in `~/.claude/settings.json` (user) or `.claude/settings.json` (project), not in the plugin itself. Replace `notify-send` with your system's notification command if not on Linux.
 
+## Installing on Windows (one-click)
+
+For a fresh Windows 11 machine that has Claude Code CLI installed but nothing else (no Git,
+Node.js, .NET SDK) — one PowerShell command installs prerequisites, registers the plugin with
+Claude Code, and installs all four of this plugin's installable MCP servers:
+
+```powershell
+irm https://raw.githubusercontent.com/HazardMK/claude-configs/master/profile-al-development/install/install.ps1 | iex
+```
+
+**Before you run this, review the script.** It runs with your current user's privileges. It
+prompts for elevation exactly once (installing Git/Node.js/.NET SDK/jq via `winget`) — everything
+else runs as your normal user. It's safe to re-run: every step checks current state first, so
+re-running repairs a partial install or picks up a newer `ALCops.Mcp` release.
+
+### What it installs
+
+| Component | Method |
+|---|---|
+| Git for Windows, Node.js LTS, .NET SDK 8, `jq` | `winget` (one elevated prompt) |
+| `~/claude-configs` clone | `git clone` (or a zip download if `git` isn't on PATH yet) |
+| Plugin registration | `claude plugin marketplace add` + `claude plugin install` |
+| `microsoft_docs_mcp` | Nothing — remote HTTP endpoint |
+| `al-mcp-server` | Warmed via `npx` (installs on-demand either way) |
+| `bc-code-intelligence-mcp` | `npm install -g` |
+| `alcops` (`alcops-mcp`) | `dotnet tool install -g ALCops.Mcp --prerelease`, plus the pinned BC DevTools version parsed straight out of the installed `.mcp.json` (see the ALCops troubleshooting section above — the installer reproduces that layout instead of hardcoding a version) |
+| `bc-telemetry-buddy` (`bctb-mcp`) | **Not installed.** No public npm/PyPI/NuGet package exists for it. |
+
+### Known limitations
+
+- **`bc-telemetry-buddy` requires manual setup** — there's no package to fetch. If you need it,
+  get `bctb-mcp` onto your PATH some other way; the installer and health check both treat its
+  absence as expected, not a failure.
+- **The existing `hooks/al-hook-compile.sh` / `al-hook-record.sh` compile-on-stop hooks need Git
+  Bash and `jq`** to run at all on Windows. Both are installed by the steps above, but the hooks
+  themselves are bash scripts and haven't been ported to PowerShell — they're expected to work
+  once Git Bash + `jq` are present, but that combination hasn't been Windows-verified yet.
+- Run `-DryRun` (download the script and run it manually with that flag, since `irm | iex` can't
+  forward parameters) to see the planned actions without changing anything.
+
+### Checking it worked
+
+Run `/install-status` inside a Claude Code session (from this plugin) at any time, or look at the
+health-check output the installer prints at the end — both run the same
+`install/health-check.ps1`, which reads the *installed* plugin's `.mcp.json` (not just the repo
+copy) and reports PASS/WARN/FAIL/SKIP per component.
+
 ## Requirements
 
 - Claude Code CLI
