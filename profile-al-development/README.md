@@ -227,6 +227,42 @@ This profile uses three MCP servers:
 - Event discovery
 - Dependency analysis
 
+## BCQuality Integration
+
+This profile's development, testing, and code review flows all consult [Microsoft's BCQuality](https://github.com/microsoft/BCQuality) — a curated, citation-backed knowledge base of BC/AL best practices — via its `bcquality-al-review` skill. BCQuality ships as its **own separate plugin**, independent of this repo; it is not bundled here and must be installed alongside `profile-al-development`.
+
+### Installing BCQuality
+
+Extend your project's `.claude/settings.json` with a second marketplace entry:
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "my-configs": {
+      "source": { "source": "directory", "path": "~/claude-configs" }
+    },
+    "bcquality": {
+      "source": { "source": "github", "repo": "microsoft/BCQuality" }
+    }
+  },
+  "enabledPlugins": {
+    "profile-al-development@my-configs": true,
+    "bcquality-al-review@bcquality": true
+  }
+}
+```
+
+### Where it's wired in
+
+| Touchpoint | Workflow | What it checks |
+|---|---|---|
+| Dev-time per-file check | `/develop` (`al-developer-prompt.md`) | Each file, right after it compiles cleanly — catches violations while the module is still being written |
+| 5th parallel reviewer | `/develop` Step 6/7 | Full diff, after implementation — cross-file findings a per-file check can miss |
+| Shared review gate | `review-checklists` (used by `/develop`, `/fix`) | Changed file(s)/diff, before any code is presented to the user |
+| Test file gate | `/test` Step 8.4 | All test AL files, after `bc-test` passes and before the mutation-testing adversary (Step 8.5) |
+
+All four touchpoints share the same contract: `blocker`/`major` findings must be fixed before proceeding; `minor`/`info` findings are noted but non-blocking; and BCQuality being unavailable (`not-applicable`, `no-knowledge`, or `failed` outcomes) is always treated as a clean pass — **BCQuality is additive and never blocks a workflow that would otherwise pass**, including when the `bcquality` plugin isn't installed at all.
+
 ## Directory Structure
 
 ```
