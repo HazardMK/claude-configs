@@ -6,10 +6,10 @@ set -euo pipefail
 
 INPUT=$(cat)
 
-SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // empty' 2>/dev/null)
+SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // empty' 2>/dev/null) || SESSION_ID=""
 QUEUE_FILE="/tmp/al-compile-queue-${USER}-${SESSION_ID:-default}"
 
-FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null)
+FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null) || FILE_PATH=""
 
 [[ -z "$FILE_PATH" ]] && exit 0
 [[ "$FILE_PATH" != *.al ]] && exit 0
