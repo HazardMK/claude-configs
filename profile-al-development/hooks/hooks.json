@@ -1,6 +1,18 @@
 {
-  "description": "AL development hooks — compile on turn end",
+  "description": "AL development hooks — compile on turn end, workspace init on session start",
   "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/al-hook-session-workspace.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "Edit|Write",
