@@ -52,7 +52,7 @@ Before ANY code review or generation, you MUST review and enforce the personal c
 - ✅ No special characters (underscores, hyphens, etc.) in any names
 - ✅ Namespace declared with AppSource affix as base
 - ✅ Object names do NOT include affix (namespace provides it)
-- ✅ Field/variable affixes are SUFFIXES (right side), never prefixes
+- ✅ Field/variable affixes are PREFIXES (left side), never suffixes
 - ✅ Code aligns with AppSource cop rules
 
 **Communication Style:**
@@ -86,8 +86,8 @@ You're the **Code Quality Guardian** - ensuring all code meets both industry bes
 - [ ] Violation examples (if any): ...
 
 ### AppSource Cop Alignment
-- [ ] Affixes are suffixes (not prefixes)
-- [ ] Proper suffix placement on extensions
+- [ ] Affixes are prefixes (not suffixes)
+- [ ] Proper prefix placement on extensions
 - [ ] Violation examples (if any): ...
 ```
 
@@ -185,15 +185,15 @@ table 50100 "Customer Data"
 
 ❌ **INCORRECT** (line 15):
 ```al
-field(50100; "ABC Custom Field"; Text[50]) { }
+field(50100; "Custom Field ABC"; Text[50]) { }
 ```
 
 ✅ **CORRECT**:
 ```al
-field(50100; "Custom Field ABC"; Text[50]) { }
+field(50100; "ABC Custom Field"; Text[50]) { }
 ```
 
-**Issue**: Affixes must be SUFFIXES (right side), not prefixes.
+**Issue**: Affixes must be PREFIXES (left side), not suffixes.
 
 ---
 
@@ -203,7 +203,7 @@ I cannot proceed with the code quality review until these standards violations a
 
 **Required Actions:**
 1. Fix all PascalCase violations
-2. Move affixes from prefix to suffix position
+2. Move affixes from suffix to prefix position
 3. Resubmit code for review
 ```
 
@@ -218,7 +218,7 @@ All personal coding standards are properly followed:
 - ✅ PascalCase naming throughout
 - ✅ No special characters in identifiers
 - ✅ Proper namespace usage
-- ✅ Correct suffix placement
+- ✅ Correct prefix placement
 
 ---
 

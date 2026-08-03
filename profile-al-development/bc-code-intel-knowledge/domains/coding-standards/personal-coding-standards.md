@@ -130,14 +130,14 @@ namespace ABC.Integration;     // Integration-related objects
 
 ## AppSource Cop Alignment
 
-### **Always Use SUFFIXES, Never Prefixes**
-- Field names in extensions: Use suffixes on the RIGHT side
-- Variable names (when needed): Use suffixes on the RIGHT side
-- All affixes must be suffixes (not prefixes)
+### **Always Use PREFIXES, Never Suffixes**
+- Field names in extensions: Use prefixes on the LEFT side
+- Variable names (when needed): Use prefixes on the LEFT side
+- All affixes must be prefixes (not suffixes)
 
 **IMPORTANT DISTINCTION:**
 - **Custom tables (your own objects)**: Field names DON'T need affixes
-- **Table extensions (extending dependencies)**: Field names MUST have suffix affixes
+- **Table extensions (extending dependencies)**: Field names MUST have prefix affixes
 
 **Examples:**
 ```al
@@ -160,7 +160,7 @@ codeunit 50100 SalesManagement
     var
         TotalAmount: Decimal;  // No affix needed for local vars in your objects
         OrderNo: Code[20];
-        CustomAmountABC: Decimal;  // ✅ Suffix only when disambiguation needed
+        ABCCustomAmount: Decimal;  // ✅ Prefix only when disambiguation needed
     begin
         // ...
     end;
@@ -182,14 +182,14 @@ tableextension 50100 SalesHeader extends "Sales Header"
 {
     fields
     {
-        // ✅ CORRECT - Fields need suffix when extending standard tables
-        field(50100; CustomFieldABC; Text[50]) { }
-        field(50101; SpecialDiscountABC; Decimal) { }
+        // ✅ CORRECT - Fields need prefix when extending standard tables
+        field(50100; ABCCustomField; Text[50]) { }
+        field(50101; ABCSpecialDiscount; Decimal) { }
 
         // ❌ INCORRECT
-        field(50102; CustomField; Text[50]) { }  // Wrong: missing suffix in extension
-        field(50103; ABCCustomField; Text[50]) { }  // Wrong: prefix instead of suffix
-        field(50104; "Custom Field ABC"; Text[50]) { }  // Wrong: contains spaces
+        field(50102; CustomField; Text[50]) { }  // Wrong: missing prefix in extension
+        field(50103; CustomFieldABC; Text[50]) { }  // Wrong: suffix instead of prefix
+        field(50104; "ABC Custom Field"; Text[50]) { }  // Wrong: contains spaces
     }
 }
 
@@ -200,8 +200,8 @@ pageextension 50100 SalesOrder extends "Sales Order"
     {
         addafter(Amount)
         {
-            // ✅ CORRECT - Control referencing field with suffix
-            field(CustomFieldABC; Rec.CustomFieldABC) { }
+            // ✅ CORRECT - Control referencing field with prefix
+            field(ABCCustomField; Rec.ABCCustomField) { }
         }
     }
 }
@@ -222,8 +222,8 @@ When writing or reviewing AL code, ensure:
 - [ ] Object names do NOT include affix (namespace provides it)
 - [ ] Extension object names do NOT include affix (namespace provides it)
 - [ ] Fields in custom tables do NOT need affixes
-- [ ] Fields in table extensions MUST have suffix affixes (not prefixes)
-- [ ] Variables only need affixes when disambiguation is required (use suffixes)
+- [ ] Fields in table extensions MUST have prefix affixes (not suffixes)
+- [ ] Variables only need affixes when disambiguation is required (use prefixes)
 - [ ] Code aligns with AppSource cop rules
 
 ## Evolution

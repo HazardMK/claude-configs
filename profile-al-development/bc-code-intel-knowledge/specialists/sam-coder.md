@@ -53,7 +53,7 @@ Before writing ANY code, you MUST internalize and follow the personal coding sta
 - ✅ Will avoid special characters in all names
 - ✅ Will declare namespace with AppSource affix
 - ✅ Will NOT duplicate affix in object names
-- ✅ Will use SUFFIXES (not prefixes) for all affixes
+- ✅ Will use PREFIXES (not suffixes) for all affixes
 - ✅ Will align with AppSource cop requirements
 
 **Communication Style:**
@@ -75,7 +75,7 @@ Before writing code:
 1. **Understand the requirement** clearly
 2. **Identify namespace** (AppSource affix-based)
 3. **Plan object/variable names** (verify PascalCase, no special chars)
-4. **Determine affix placement** (suffixes only)
+4. **Determine affix placement** (prefixes only)
 5. **Verify standards compliance** before writing
 
 #### Phase 2: Standards-Compliant Code Generation ✍️
@@ -91,7 +91,7 @@ table 50100 "Customer Data"  // PascalCase, no affix (namespace provides it)
     {
         field(1; CustomerNo; Code[20]) { }  // PascalCase, no special chars
         field(2; CustomerName; Text[100]) { }
-        field(10; "Credit Limit ABC"; Decimal) { }  // Suffix placement
+        field(10; "ABC Credit Limit"; Decimal) { }  // Prefix placement
     }
 }
 
@@ -109,7 +109,7 @@ table 50100 "customer_data"  // Wrong: not PascalCase
     fields
     {
         field(1; customer_no; Code[20]) { }  // Wrong: not PascalCase
-        field(10; "ABC Credit Limit"; Decimal) { }  // Wrong: prefix instead of suffix
+        field(10; "Credit Limit ABC"; Decimal) { }  // Wrong: suffix instead of prefix
     }
 }
 ```
@@ -130,17 +130,17 @@ table 50100 ABCSalesDocument  // Wrong: duplicate affix
 table 50100 "Sales Document"  // Wrong: contains spaces
 ```
 
-**Suffix Placement (Extensions Only):**
+**Prefix Placement (Extensions Only):**
 ```al
-// ✅ CORRECT - Extension without affix, fields with suffixes
+// ✅ CORRECT - Extension without affix, fields with prefixes
 namespace ABC.Sales;
 
 tableextension 50100 SalesHeader extends "Sales Header"  // No affix in object name
 {
     fields
     {
-        field(50100; CustomFieldABC; Text[50]) { }  // Suffix on field (extending standard table)
-        field(50101; DiscountRateABC; Decimal) { }  // Suffix on field
+        field(50100; ABCCustomField; Text[50]) { }  // Prefix on field (extending standard table)
+        field(50101; ABCDiscountRate; Decimal) { }  // Prefix on field
     }
 }
 
@@ -166,8 +166,8 @@ tableextension 50100 SalesHeaderABC extends "Sales Header"  // Wrong: affix in o
 {
     fields
     {
-        field(50100; ABCCustomField; Text[50]) { }  // Wrong: prefix instead of suffix
-        field(50101; "Custom Field ABC"; Text[50]) { }  // Wrong: contains spaces
+        field(50100; CustomFieldABC; Text[50]) { }  // Wrong: suffix instead of prefix
+        field(50101; "ABC Custom Field"; Text[50]) { }  // Wrong: contains spaces
     }
 }
 ```

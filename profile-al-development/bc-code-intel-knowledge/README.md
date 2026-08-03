@@ -26,10 +26,10 @@ bc-code-intel-knowledge/
 - Object names do NOT include the affix (namespace provides it)
 - Extensions also do NOT include affix in object name
 
-### 3. Affix Rules (SUFFIXES ONLY)
+### 3. Affix Rules (PREFIXES ONLY)
 - **Custom tables**: Fields DON'T need affixes
-- **Table extensions**: Fields MUST have suffix affixes (e.g., `CustomFieldABC`)
-- **Never use prefixes**: Always `FieldNameABC`, never `ABCFieldName`
+- **Table extensions**: Fields MUST have prefix affixes (e.g., `ABCCustomField`)
+- **Never use suffixes**: Always `ABCFieldName`, never `FieldNameABC`
 
 ## Examples
 
@@ -48,13 +48,13 @@ table 50100 CustomerData
     }
 }
 
-// Extension - no affix in object name, but fields need suffixes
+// Extension - no affix in object name, but fields need prefixes
 tableextension 50100 SalesHeader extends "Sales Header"
 {
     fields
     {
-        field(50100; CustomFieldABC; Text[50]) { }
-        field(50101; DiscountRateABC; Decimal) { }
+        field(50100; ABCCustomField; Text[50]) { }
+        field(50101; ABCDiscountRate; Decimal) { }
     }
 }
 ```
@@ -71,8 +71,8 @@ tableextension 50100 SalesHeaderABC extends "Sales Header"  // Wrong: affix in n
 {
     fields
     {
-        field(50100; ABCCustomField; Text[50]) { }  // Wrong: prefix
-        field(50101; "Custom Field ABC"; Text[50]) { }  // Wrong: spaces
+        field(50100; CustomFieldABC; Text[50]) { }  // Wrong: suffix
+        field(50101; "ABC Custom Field"; Text[50]) { }  // Wrong: spaces
     }
 }
 ```

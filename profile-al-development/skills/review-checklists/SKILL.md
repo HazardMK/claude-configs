@@ -69,7 +69,7 @@ Before presenting tests to the user, verify:
 ```
 Agent produces code → Reviewer glances at it → "Looks good" → Present to user
 
-Result: User finds a missing SetLoadFields, a prefix affix on a table extension
+Result: User finds a missing SetLoadFields, a suffix affix on a table extension
 field, and a hardcoded field name in an error message. Trust erodes.
 ```
 
@@ -78,12 +78,12 @@ field, and a hardcoded field name in an error message. Trust erodes.
 ```
 Agent produces code → Reviewer checks against checklist → Finds:
   1. Line 42: SetLoadFields missing before FindSet
-  2. Line 67: Field "ABC Status" uses prefix affix, should be "Status ABC"
+  2. Line 67: Field "Status ABC" uses suffix affix, should be "ABC Status"
   3. Line 89: Error('Status must be Open') should use FieldCaption
 
 → Sends specific feedback back to the coding step:
   "Fix these 3 issues: (1) Add SetLoadFields before the FindSet on line 42,
-   loading No. and Status. (2) Rename 'ABC Status' to 'Status ABC' -- suffix
+   loading No. and Status. (2) Rename 'Status ABC' to 'ABC Status' -- prefix
    only. (3) Replace hardcoded 'Status' with FieldCaption(Status) in the
    error on line 89."
 
