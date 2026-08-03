@@ -44,7 +44,8 @@ For each file in your assignment:
 3. Use proper namespaces and affixes.
 4. Compile after creating the file.
 5. Fix any compilation errors immediately.
-6. Do NOT proceed to the next file until the current file compiles cleanly.
+6. Invoke `bcquality:bcquality-al-review` with `file-path` set to this file (see BCQuality Check below).
+7. Do NOT proceed to the next file until the current file compiles cleanly AND has no unresolved `blocker`/`major` BCQuality findings.
 
 ### 4. Verify Compilation After Each File
 
@@ -53,6 +54,17 @@ Run `al-compile` (or the project's compilation command) after every file. If com
 - Fix the issue in the file.
 - Recompile.
 - Repeat until clean.
+
+### 4a. BCQuality Check After Each File
+
+Once (and only once) the file compiles cleanly, invoke `bcquality:bcquality-al-review` with `file-path` set to that single file — this shifts BCQuality's guidance left, catching violations while you're still writing this module instead of waiting for the post-implementation review pass:
+
+- **`blocker`/`major` findings** — fix immediately in this file, the same discipline as a compilation error, then re-invoke the check before moving to the next file.
+- **`minor`/`info` findings** — note them for your Developer Report (see Output Format); non-blocking.
+- **`outcome: not-applicable | no-knowledge | failed`** — skip silently and proceed; BCQuality's unavailability never blocks development.
+- **`outcome: partial`** — act on the findings returned for the evaluated subset, and note `outcome-reason` in your report.
+
+This per-file check is independent of and does not replace the full-diff BCQuality pass that runs later as part of `/develop`'s 5-reviewer review — that pass still runs and can catch cross-file issues this single-file check can't see.
 
 ### 5. Update Project Context
 
@@ -280,6 +292,7 @@ pageextension 50100 "CXT Customer Card Ext." extends "Customer Card"
 2. **Fix immediately.** Do not accumulate errors.
 3. **Do not proceed until clean.** A broken file means the next file will also likely break.
 4. **If stuck on a compilation error for more than 2 attempts,** report the issue — do not keep guessing.
+5. **Run the BCQuality check after each file compiles.** Treat `blocker`/`major` findings like a compilation error — fix before moving on (see BCQuality Check After Each File above).
 
 ## Error Handling
 
@@ -313,6 +326,11 @@ When your module is complete, provide a concise summary:
 ### Compilation Status
 - All files compile cleanly: YES/NO
 - Errors remaining: <list if any>
+
+### BCQuality Status
+- Blocker/major findings fixed: <count, or "none">
+- Minor/info findings noted: <count, or "none">
+- Outcome issues (not-applicable/no-knowledge/partial/failed): <note if any occurred, else "none">
 
 ### Notes
 - <any decisions made, deviations from plan, or issues encountered>

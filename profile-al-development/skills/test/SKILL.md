@@ -118,6 +118,30 @@ For each failing test:
 
 **Do NOT present to the user until ALL tests pass.**
 
+## Step 8.4: BCQuality Check on Test Files (MANDATORY)
+
+Once ALL tests pass (from Step 7 directly, or after Step 8 iteration converges), and before invoking the adversary in Step 8.5, run a BCQuality pass over the test files themselves. This is an inline call you make directly — not a spawned agent — the same pattern `review-checklists` uses, not the 5-reviewer pattern from `/develop`.
+
+1. Obtain a unified diff of every test AL file created in this task (`git diff` scoped to those files, including untracked new files via `git diff --no-index /dev/null <file>` or equivalent) and invoke the `bcquality:bcquality-al-review` skill once with that diff as the `pr-diff` input. Only if a diff cannot be produced, fall back to one `file-path` invocation per test file and merge the returned findings-reports by concatenating their `findings[]` arrays.
+2. Map the returned `severity` values the same way `develop/SKILL.md` Step 7 does:
+
+   | BCQuality `severity` | Mapped to |
+   |---|---|
+   | `blocker` | CRITICAL |
+   | `major` | HIGH |
+   | `minor` | MINOR |
+   | `info` | Not tabled — noted in the test plan's prose |
+
+3. **If any `blocker`/`major` finding exists:**
+   - Identify the owning test engineer by the finding's test codeunit ID (same ID-range lookup as Step 8).
+   - Dispatch the fix to that engineer with the finding's `message` and, if present, the primary `references[0].path`.
+   - Re-run `bc-test` to confirm tests still pass, then re-run this BCQuality check.
+   - Repeat until no `blocker`/`major` findings remain.
+4. **If only `minor`/`info` findings or none:** proceed to Step 8.5. Note the findings in the test plan.
+5. **Outcome handling:** `completed` (even with empty `findings`), `not-applicable`, and `no-knowledge` are all clean passes. `partial` — use the findings for the evaluated subset and note `outcome-reason` in Step 9's report. `failed` — ignore `findings` entirely, note `outcome-reason`, and do not block; proceed to Step 8.5 regardless. BCQuality's unavailability never blocks the test workflow.
+
+**Do NOT proceed to Step 8.5 until this check reports no unresolved `blocker`/`major` findings** (or an outcome that's treated as a clean pass above).
+
 ## Step 8.5: Run Test Adversary (MANDATORY)
 
 Once all tests pass, invoke `/verify-tests`. It runs automatically in a forked sub-agent with clean context (`context: fork`) — no manual agent spawning needed.
@@ -179,6 +203,11 @@ Write `.dev/<task-slug>/05-test-plan.md` as YOUR synthesis (not agent output). I
 - Failed: 0
 - Execution time: Xs
 
+## BCQuality Check (Step 8.4)
+
+- Outcome: clean / N findings addressed
+- Notes: <outcome-reason if partial/failed, or minor/info findings noted>
+
 ## Coverage Analysis
 
 ### What's Covered
@@ -217,3 +246,4 @@ Use **AskUserQuestion** (BLOCKING):
 5. **ID ranges must not overlap** — verify before and after agent execution
 6. **One test per behavior** — no multi-assertion mega-tests
 7. **The adversary always runs** — Step 8.5 is not optional. "All tests pass" is not a quality signal on its own.
+8. **The BCQuality check always runs** — Step 8.4 is not optional, and gates Step 8.5. Its unavailability (`not-applicable`/`no-knowledge`/`failed`) is a clean pass, but it must still be invoked.
