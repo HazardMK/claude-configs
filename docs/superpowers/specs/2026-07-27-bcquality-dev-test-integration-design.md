@@ -21,9 +21,9 @@ All new touchpoints reuse the conventions established in phase 1: same skill nam
 
 This is additive to, not a replacement for, the existing Step 6/7 full-diff 5th-reviewer pass in `develop/SKILL.md` — that pass still runs, and catches cross-file issues a single-file check can't see. The Developer Report template gains a "BCQuality Status" section (findings fixed/noted, any outcome issues) alongside the existing "Compilation Status" section, so the manager has an audit trail without re-deriving it from the per-file checks.
 
-## Integration point 2: `/test` — Step 7.5 gate on test files
+## Integration point 2: `/test` — Step 8.4 gate on test files
 
-**`skills/test/SKILL.md`** gains a new **Step 7.5: BCQuality Check on Test Files**, inserted after Step 7 (all `bc-test` passing) and before Step 8.5 (the mutation-testing adversary). This is a manager-level inline call — not a spawned agent — the same pattern `review-checklists` already uses, not the 5-reviewer pattern:
+**`skills/test/SKILL.md`** gains a new **Step 8.4: BCQuality Check on Test Files**, inserted after Step 7/8 (once all `bc-test` runs pass, whether directly from Step 7 or after Step 8 iteration converges) and before Step 8.5 (the mutation-testing adversary). This is a manager-level inline call — not a spawned agent — the same pattern `review-checklists` already uses, not the 5-reviewer pattern:
 
 - Obtain a diff of all test AL files created in this task (fallback: one `file-path` invocation per test file, merged, same fallback rule as the BCQuality Reviewer in `reviewer-prompts.md`) and invoke `bcquality:bcquality-al-review` once with `pr-diff`.
 - Apply the same severity mapping table as `develop/SKILL.md` Step 7 (`blocker`→CRITICAL, `major`→HIGH, `minor`→MINOR, `info`→prose).
@@ -31,11 +31,11 @@ This is additive to, not a replacement for, the existing Step 6/7 full-diff 5th-
 - `minor`/`info` — note for the test plan; non-blocking.
 - Outcome handling identical to the table below.
 
-Only once Step 7.5 is clean does Step 8.5 (the mutation/assertion adversary) run — that step is unchanged; it addresses a distinct concern (mutation survival, assertion strength) with no overlap to reconcile against BCQuality's rule-based findings.
+Only once Step 8.4 is clean does Step 8.5 (the mutation/assertion adversary) run — that step is unchanged; it addresses a distinct concern (mutation survival, assertion strength) with no overlap to reconcile against BCQuality's rule-based findings.
 
-The Step 9 test plan template gains a line recording the BCQuality outcome (e.g. "BCQuality: clean" or "BCQuality: N findings addressed"), and the "Key Rules" list gains a rule making Step 7.5 mandatory, mirroring the existing "the adversary always runs" framing for Step 8.5.
+The Step 9 test plan template gains a line recording the BCQuality outcome (e.g. "BCQuality: clean" or "BCQuality: N findings addressed"), and the "Key Rules" list gains a rule making Step 8.4 mandatory, mirroring the existing "the adversary always runs" framing for Step 8.5.
 
-No changes to `test-engineer-prompts.md`: the 4 engineer prompts have no per-file compile loop today, so there's no natural per-engineer insertion point for a per-file check (unlike `al-developer-prompt.md`). The manager-level Step 7.5 gate is the right level — consistent with how `bc-test` itself only runs in aggregate (Step 7), not per-file per-engineer.
+No changes to `test-engineer-prompts.md`: the 4 engineer prompts have no per-file compile loop today, so there's no natural per-engineer insertion point for a per-file check (unlike `al-developer-prompt.md`). The manager-level Step 8.4 gate is the right level — consistent with how `bc-test` itself only runs in aggregate (Step 7), not per-file per-engineer.
 
 ## Failure handling (applies to both integration points, reused verbatim from phase 1)
 
@@ -55,7 +55,7 @@ All under `~/claude-configs/`:
 
 - `docs/superpowers/specs/2026-07-27-bcquality-dev-test-integration-design.md` — this doc
 - `profile-al-development/skills/develop/al-developer-prompt.md` — per-file BCQuality check + Developer Report template update
-- `profile-al-development/skills/test/SKILL.md` — Step 7.5, Step 9 template update, Key Rules update
+- `profile-al-development/skills/test/SKILL.md` — Step 8.4, Step 9 template update, Key Rules update
 - `profile-al-development/README.md` — BCQuality Integration section (install/registration + touchpoint list)
 - `profile-al-development/.claude-plugin/plugin.json` — version bump (minor) + description update
 
